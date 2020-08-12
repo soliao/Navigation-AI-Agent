@@ -66,8 +66,9 @@ The repo contains:
 ## How to run the code
 
 #### 1. Open `SL_Navigation_DQN.ipynb` with Jupyter Notebook
-#### 2. Run `Box 1` to import packages\
+#### 2. Run `Box 1` to import packages
     In **line 30**, paste the path to `Bananas.exe` after the `file_name = `
+    for example, 'file_name = "./Banana_Windows_x86_64/Banana.exe"'
 #### 3. Run `Box 2` to set hperparameters
   - `EPISODES` Maximum number of episodes to train
   - `UPDATE_EVERY` sets the number of episodes to update the target network
@@ -82,7 +83,7 @@ The repo contains:
   - `batch_size` sets the number of sampled replays
   - `seed` sets the seed
   
-#### 4. Run `Box 3` to start training\
+#### 4. Run `Box 3` to start training
     After training, the weights of the network will be saved with the file name `checkpoint.pth`
 #### 5. (Optional) Run `Box 4` to load saved weights into the agent and watch it forage for bananas
 #### 6. Before closing, simply use the command `env.close()` to close the environment
