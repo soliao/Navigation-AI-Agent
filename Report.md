@@ -21,6 +21,8 @@ BATCH_SIZE = 64         (number of tuples sampled from the buffer to train the a
 GAMMA = 0.99            ()
 
 ## Plot of Reward
-With the above settings, the agent mastered the task after epochs
+With the above settings, the agent solved the task after 400 epochs
+
+
 
 ## Ideas for future work
