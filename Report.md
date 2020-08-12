@@ -23,6 +23,6 @@ GAMMA = 0.99            ()
 ## Plot of Reward
 With the above settings, the agent solved the task after 400 epochs
 
-
+![navigation_scores](https://drive.google.com/file/d/1ZWkf0fWe1lDNLb53b5QTT7ntpFxrfArm/view?usp=sharing)
 
 ## Ideas for future work
