@@ -23,6 +23,9 @@ GAMMA = 0.99            ()
 ## Plot of Reward
 With the above settings, the agent solved the task after 400 epochs
 
-![navigation_scores](https://drive.google.com/file/d/1ZWkf0fWe1lDNLb53b5QTT7ntpFxrfArm/view?usp=sharing)
 
 ## Ideas for future work
+I'm interested in trying some other algorithms:
+1. 
+
+In the future I'm looking forward to soving the enviornment by using pixels values directly to train the agent. I will add some convolutional and pooling layers, or even some dropout layers into my network models.
