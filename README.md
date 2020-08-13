@@ -12,6 +12,8 @@ https://github.com/Unity-Technologies/ml-agents
 
 For this project we use a slightly different environment provided by Udacity drlnd.
 
+[![p1-env-demo.png](https://i.postimg.cc/256zS65t/p1-env-demo.png)](https://postimg.cc/gxC9MG8y)\
+The navigation environment by Unity ML-Agents
 
 ## Project details
 
@@ -24,10 +26,10 @@ and the ray-based perception of object around the agent's moving direction.
 
 **Actions**\
 The action space has 4 dimensions. The agent can choose among:
-    * moving forward (0)
-    * moving backward (1)
-    * turning left (2)
-    * turning right (3)
+  - moving forward (0)
+  - moving backward (1)
+  - turning left (2)
+  - turning right (3)
   
 **Rewards**\
 During the episode, a reward of +1 is provided when the agent collects a yellow
@@ -40,7 +42,7 @@ The environment is considered solved when the agent learns to obtain an average 
 
 ## Getting started
 
-1. Install conda\
+1. Install conda
 2. Clone the Deep-Reinforcement-Learning-Nanodegree GitHub Repo\
     https://github.com/udacity/deep-reinforcement-learning#dependencies
   
@@ -61,26 +63,26 @@ The repo contains:
 | networkModels.py | architecture of the neural network |
 | buffer.py | replay buffer |
 | dqnAgent.py | the agent class |
-| local_weights.pth | saved weights |
+| checkpoint.pth | saved weights |
 
 ## How to run the code
 
 #### 1. Open `SL_Navigation_DQN.ipynb` with Jupyter Notebook
 #### 2. Run `Box 1` to import packages
-    In **line 30**, paste the path to `Bananas.exe` after the `file_name = `
+    Paste the path to `Bananas.exe` after the `file_name = `
     for example, 'file_name = "./Banana_Windows_x86_64/Banana.exe"'
 #### 3. Run `Box 2` to set hperparameters
   - `EPISODES` Maximum number of episodes to train
-  - `UPDATE_EVERY` sets the number of episodes to update the target network
+  - `UPDATE_EVERY` sets the number of episodes to update the networks
   - `hidden_sizes` sets the sizes of the hidden layers
   - `gamma` the discount factor
   - `eps_start` the starting epsilon for selecting actions (epsilon-greedy)
-  - `eps_end` sets the minimum epsilon
-  - `eps_decay` sets the decay factor of the epsilon
+  - `eps_end` sets the terminal epsilon
+  - `eps_decay` sets the decay factor of epsilon
   - `lr` the learning rate
   - `tau` soft update hyperparameter
   - `buffer_size` sets the size of the replay buffer
-  - `batch_size` sets the number of sampled replays
+  - `batch_size` sets the size of the replay batch for each training
   - `seed` sets the seed
   
 #### 4. Run `Box 3` to start training
