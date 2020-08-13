@@ -73,10 +73,10 @@ With the parameters above, the agent solved the task after 483 episodes, i.e., t
 [![p1-scores.png](https://i.postimg.cc/vTLRzFB9/p1-scores.png)](https://postimg.cc/8f5npYLP)
 
 ## Ideas for future work
-Future work will be focused on improving the learning by trying to implement the following methods:
-**1. Prioritized Experience Replay**
-This method imporves the learning by sampling the replays that have higher TD error more often than the replays that have smaller TD error.\
-**2. Double DQN**
+Future work will be focused on improving the learning by trying to implement the following methods:\
+**1. Prioritized Experience Replay**\
+This method imporves learning by sampling the replays that have higher TD error more often than the replays that have smaller TD error.\
+**2. Double DQN**\
 Q-learning is prone to overestimating the Q-values. Double DQN replaces the TD target `r + gamma * max_{a}Q_target(s', a)` by\
 `r + gamma * max_{a' selected from Q_local} Q_target(s', a')`\
 that is, we select the action a' that yields that maximum action value which Q_local(s', a') produces, and feed that a' to Q_target to calculate the target action value Q_target(s', a')\
