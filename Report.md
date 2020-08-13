@@ -8,47 +8,58 @@ https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf
 
 **The basics**
 
-We use deep Q-learning to solve this project. DQN is a type of value-based methods in reinforcement learning, where deep artificial neural networks are trained to learn the action values (Q). The updating rule of the action values is similar to the temporal-difference (TD) learning algorithm, where:
+We use deep Q-learning to solve this project. DQN is a type of value-based methods in reinforcement learning, where deep artificial neural networks are trained to learn the action values (Q). The update rule of the action values is similar to the temporal-difference (TD) learning algorithm, where:
 
-`Q(s, a) <-- Q(s, a) + alpha * [r + gamma * max_{a}Q(s', a) - Q(s, a)]`
+`Q(s, a) <-- Q(s, a) + alpha * [r + gamma * max_{a'}Q(s', a') - Q(s, a)]`
 
-where max_{a}Q(s', a) means that we chose the maximum Q(s', a) among all possible actions a\
+where max_{a'}Q(s', a') means that we chose the action *a'* that can maximize Q(s', a') and multiply that action value by *gamma* to predict the future value
 
-A slight difference in DQN is that here we use 2 seperate Q-networks: a local network and a target network, with the updating rule:
+A slight difference in this deep Q-learning algorithm is that we use 2 seperate Q-networks (a local network and a target network), with the update rule:
 
-`Q_local(s, a) <-- Q_local(s, a) + alpha * [r + gamma * max_{a}Q_target(s', a) - Q_local(s, a)]`
+`Q_local(s, a) <-- Q_local(s, a) + alpha * [r + gamma * max_{a'}Q_target(s', a') - Q_local(s, a)]`
 
-where we frequently update the weights of Q_local every several (`UPDATE_EVERY`) time steps, and soft update the weights of Q_target.
+where we update the weights of *Q_local* every few (`UPDATE_EVERY`) time steps, and soft update the weights of *Q_target* to make it change slowly than *Q_local*
+
+**Neural network architecture**
+
+The default architectures of both local and target Q-network consist of:
+
+- **the input layer**: fully connected layer with input size = 37, output size = 400, activation function = ReLU
+- **one hidden layer**: fully connected layer with input size = 400, output size = 300, activation function = ReLU
+- **the output layer**: fully connected layer with input size = 300, output size = 4
+
+More details can be found in the `networkModels.py` file
+
 
 **The algorithm**
 
-Below is a brief descriptions of the DQN routine:
+Below is a brief description of DQN:
 
-- initialize two networks (Q_local and Q_target) with identical weights
+- initialize two networks (*Q_local* and *Q_target*) with identical weights
 - t_step = 0
-- observe the initial state s (size = 37) from the environment
+- observe the initial state **s** (size = 37) from the environment
 - while the environment is not solved:
   - t_step += 1
-  - use Q_local to calculate the actions values (for all 4 actions)
-  - the agent use epsilon-greedy policy to take an action a
-  - the agent collects the reward r and enters the next state (s')
-  - add the experience tuple (s, a, r, s') into the replay buffer
-  - if there enough number (>= `batch_size`) of replays in the buffer:
-    - randomly sample a batch of size = `batch_size` replay tuples (s, a, r, s') from the buffer
-    - use Q_target to calculate predicted action value `max_{a'}Q_target(s', a')`
-    - use Q_local to calculate action value Q_local(s, a)
-    - use gradient decent to update the weights of Q_local by minimizing the TD error\
-    `r + gamma * max_{a}Q_target(s', a) - Q_local(s, a)`
-    - soft-update the weights of Q_target\
+  - use *Q_local* to calculate the action values (for all 4 actions)
+  - the agent uses the epsilon-greedy policy to take an action **a**
+  - the agent collects the reward **r** and enters the next state (**s'**)
+  - add the experience tuple **(s, a, r, s')** into the replay buffer
+  - if there are enough (>= `batch_size`) replays in the buffer:
+    - randomly sample a batch of size = `batch_size` replay tuples **(s, a, r, s')** from the buffer
+    - use *Q_target* to calculate predicted action value `max_{a'}Q_target(s', a')`
+    - use *Q_local* to calculate action value Q_local(s, a)
+    - use gradient decent (loss = MSE) to update the weights of *Q_local* by minimizing the error\
+    `r + gamma * max_{a'}Q_target(s', a') - Q_local(s, a)`
+    - soft-update the weights of *Q_target*\
     `new_Q_target_weights <-- tau * old_Q_local_weights + (1-tau) * old_Q_target_weights`
-  - s <- s'
+  - s <-- s'
 
 
 ## Hyperparameters
 
 | Hyperparameter | Value | Description |
 | ----------- | ----------- | ----------- |
-| hidden_sizes | [400, 300] | units of hidden fully connected layers |
+| hidden_sizes | [400, 300] | input and output sizes of the hidden FC layers |
 | gamma | 0.99 | discount rate |
 | lr | 1e-4 | learning rate |
 | tau | 1e-3 | soft update rate <1> |
@@ -73,12 +84,24 @@ With the parameters above, the agent solved the task after 483 episodes, i.e., t
 [![p1-scores.png](https://i.postimg.cc/vTLRzFB9/p1-scores.png)](https://postimg.cc/8f5npYLP)
 
 ## Ideas for future work
-Future work will be focused on improving the learning by trying to implement the following methods:\
-**1. Prioritized Experience Replay**\
-This method imporves learning by sampling the replays that have higher TD error more often than the replays that have smaller TD error.\
-**2. Double DQN**\
-Q-learning is prone to overestimating the Q-values. Double DQN replaces the TD target `r + gamma * max_{a}Q_target(s', a)` by\
-`r + gamma * max_{a' selected from Q_local} Q_target(s', a')`\
-that is, we select the action a' that yields that maximum action value which Q_local(s', a') produces, and feed that a' to Q_target to calculate the target action value Q_target(s', a')\
+Future work will be focused on implementing the following methods:
 
-I'm also looking forward to soving the enviornment by using pixels values directly as the input to train the agent. Perhaps I will need to replace the hidden fully-connected layers by some convolutional and pooling layers, or even some dropout layers in my network arcitecture.
+**1. Prioritized Experience Replay**
+
+This method imporves learning by sampling the replays that have higher TD error more often than the replays that have smaller TD error.
+
+To be specific, each experience tuple **(s, a, r, s')** will be assigned with a weight for sampling:
+
+weight for sampling = `abs(r + gamma * max_{a'}Q_target(s', a') - Q_local(s, a)) + delta`
+
+where `delta` is a small constant so that it's still possible that we'll sample a replay with zero TD error
+
+**2. Double DQN**
+
+Q-learning is prone to overestimating the Q-values. Double DQN replaces the TD target `r + gamma * max_{a'}Q_target(s', a')` by
+
+`r + gamma * max_{a' that maximized Q_local(s', a')} Q_target(s', a')`
+
+that is, we select the action *a'* that yields the maximum action value *Q_local(s', a')*, and feed that *a'* to *Q_target* to calculate the predicted action value *Q_target(s', a')*
+
+I'm also looking forward to soving the enviornment by using pixels values directly as the input. Perhaps I will need to replace the hidden fully connected layer by some convolutional and pooling layers, or even some dropout layers for regularization in my network architecture.
