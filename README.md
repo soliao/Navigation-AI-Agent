@@ -1,4 +1,4 @@
-# DeepRL-navigation-bananas-udacity-drlnd-p1
+# Navigation AI Agent
 
 - Reinforcement learning environment by Unity ML-Agents
 - This repository corresponds to __Project #1__ of Udacity's Deep Reinforcement Learning Nanodegree (drlnd)\
